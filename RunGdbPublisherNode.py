@@ -4,6 +4,7 @@ from nav_msgs import msg as nav_msgs
 from tf2_msgs import msg as tf2_msgs
 from genpy import rostime
 
+# refer to README.md for more information
 
 if 'gdb_publisher_node' not in locals():
   publisher_dictionary = GdbPublisherDictionary([
