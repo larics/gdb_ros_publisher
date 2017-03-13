@@ -1,0 +1,36 @@
+set pagination off
+
+define enable ros_publisher
+  python gdb_publisher_node.enable_breakpoints()
+end
+
+define disable ros_publisher
+  python gdb_publisher_node.disable_breakpoints()
+end
+
+define save_state_and_disable_ros_publisher
+  python gdb_publisher_node.save_state_and_disable_ros_publisher()
+end
+
+define restore_ros_publisher_state
+  python gdb_publisher_node.restore_ros_publisher_state()
+end
+
+define hook-reverse-continue
+  save_state_and_disable_ros_publisher
+end
+define hook-reverse-step
+  save_state_and_disable_ros_publisher
+end
+define hook-reverse-stepi
+  save_state_and_disable_ros_publisher
+end
+define hook-reverse-finish
+  save_state_and_disable_ros_publisher
+end
+define hook-reverse-next
+  save_state_and_disable_ros_publisher
+end
+define hook-stop
+  restore_ros_publisher_state
+end
