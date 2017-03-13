@@ -34,3 +34,7 @@ end
 define hook-stop
   restore_ros_publisher_state
 end
+
+define build_publish_map_cartographer
+  python gdb_publisher_node.build_publish_map()
+end

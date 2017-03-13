@@ -240,7 +240,9 @@ class GdbPublisherNode(object):
   def convert_serialized_to_python(c_array, length):
     return ''.join([chr(c_array[char]) for char in range(length)])
 
-  def build_publish_map():
+  # build and publish map macro for cartographer, should be called
+  # from cartographer_ros::Run stack frame
+  def build_publish_map_cartographer(self):
     map_unique_ptr = gdb.parse_and_eval('node.map_builder_bridge_.BuildOccupancyGrid()')
     generated_map = map_unique_ptr['_M_t']['_M_head_impl'].dereference()
 
