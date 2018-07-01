@@ -19,7 +19,7 @@ if 'gdb_publisher_node' not in locals():
   GdbMessageBreakpoint(location = 'gdb_ros_publisher_helper.cpp:Publication::publish')
  ]
 
-  log_publishing = True
+  log_publishing = False
   log_publishing_state = True
 
   gdb_publisher_node = GdbPublisherNode(publisher_dictionary, breakpoints, log_publishing, log_publishing_state)

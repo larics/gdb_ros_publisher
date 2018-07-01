@@ -49,8 +49,9 @@ class GdbMessageBreakpoint(gdb.Breakpoint):
     ['latch_'])
 
   def __init__(self, location, context_extractor = lambda: {}):
-    super(GdbMessageBreakpoint, self).__init__(location)
+    super(GdbMessageBreakpoint, self).__init__(location, internal = True)
     self.context_extractor = context_extractor
+    self.silent = True
 
   def stop(self):
     if(not hasattr(self, 'enclosing_node')):
@@ -124,7 +125,6 @@ class GdbPublisherNode(object):
       print "Disabled ROS publisher."
 
   def save_state_and_disable_ros_publisher(self):
-    return
     if self.enabled_states_saved == True:
       raise Exception('This should not have happened, ROS publisher state has already been saved')
     self.breakpoint_enabled_states = [ b.enabled for b in self.breakpoints ]
@@ -134,7 +134,6 @@ class GdbPublisherNode(object):
       print "Temporarily disabled ROS publisher."
 
   def restore_ros_publisher_state(self):
-    return
     if self.enabled_states_saved == True:
       for b in zip(self.breakpoints, self.breakpoint_enabled_states):
         b[0].enabled = b[1]
