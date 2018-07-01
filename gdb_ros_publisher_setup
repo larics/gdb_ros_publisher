@@ -34,23 +34,3 @@ end
 define hook-stop
   restore_ros_publisher_state
 end
-
-define map_build_publish_cartographer
-  set $real_time = node.last_scan_matched_point_cloud_time_
-  set node.last_scan_matched_point_cloud_time_ = cartographer::common::Time::min()
-  python gdb_publisher_node.build_publish_map_cartographer()
-  set node.last_scan_matched_point_cloud_time_ = $real_time
-end
-
-set $fake_event = (ros::WallTimerEvent *) malloc(sizeof(ros::WallTimerEvent))
-
-define trajectory_state_publish_cartographer
-  set $real_time = node.last_scan_matched_point_cloud_time_
-  set node.last_scan_matched_point_cloud_time_ = cartographer::common::Time::min()
-  call node.PublishTrajectoryStates(*$fake_event)
-  set node.last_scan_matched_point_cloud_time_ = $real_time
-end
-
-define clock_publish
-  call clock_publisher.publish<rosgraph_msgs::Clock_<std::allocator<void> > >(clock)
-end

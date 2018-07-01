@@ -34,31 +34,29 @@ Be sure to have installed the newest build of rr and GDB compiled with Python 2 
             * `msgtype` – a ROS message class type
             * `queue_size`, integer – ROS publisher queue size, optional (default: 1)
 
-       2. The included breakpoints in `ros/publisher.h` should be enough to catch all published messages (except transforms). To add a new message publishing breakpoint, add a new `GdbMessageBreakpoint` instance to the `breakpoints` list. The constructor has the following prototype:
+       2. The included breakpoints in `gdb_ros_publisher_helper.cpp` should be enough to catch all published messages. To add a new message publishing breakpoint, add a new `GdbMessageBreakpoint` instance to the `breakpoints` list. The constructor has the following prototype:
 
           ```python
           GdbMessageBreakpoint(location, context_extractor = lambda: {})
             ```
           The arguments of the constructor are:
              * `location`, string – location in the source code from where the message will be extracted (it has to be completely initialized and ready for publishing at this point in the source code)
-             * `context_extractor`, lambda function which returns a dictionary – this function is executed every time the breakpoint is reached, and computes a dictionary with extracted message variables. The following keys can be specified (all are optional, and default behavior is adapted for a breakpoint at the end of the function `template<M> void ros::Publisher::publish(const M &message)`):
-               * `message_variable`, `gdb.Value` – contains the message. If unspecified, the default behavior is to look up a variable named `message`
-               * `serialized_variable`, `gdb.Value`– the variable with the message already serialized. If there isn't one available, pass `None` in the dictionary (in that case, `GdbPublisherNode` will invoke ROS message serialization in order to transfer the message to Python). If unspecified, the default behavior is to look up a variable named `m`
-               * `topic`, string – the topic on which the message is published; it has to match the topic in the appropriate `GdbPublisher`. The default behavior is to look up the topic name from the `this->impl_->topic_` string, where `this` is the `ros::Publisher` instance from the invocation of `ros::Publisher::publish()`
+             * `context_extractor`, lambda function which returns a dictionary – this function is executed every time the breakpoint is reached, and computes a dictionary with extracted message variables. The following keys can be specified (all are optional, and default behavior is adapted for a breakpoint  `void ros::Publication::publish(const M &message)`):
+               * `serialized_variable`, `gdb.Value`– the variable with the serialized message
+               * `topic`, string – the topic on which the message is published; it has to match the topic in the appropriate `GdbPublisher`. The default behavior is to look up the topic name from the `this->name_` string, where `this` is the `ros::Publication` instance from invocation of `ros::Publisher::publish()`
+               * `latch`, boolean - whether the topic is latched, by default obtained from `this->latch_` in ros::Publication
 
-        3. To add a new transform publishing breakpoint, add a new `GdbTransformBreakpoint` instance to the `breakpoints` list. The constructor has the following prototype:
+       2. Build the helper library for intercepting message publication:
 
-            ```python
-            GdbTransformBreakpoint(
-              location,
-              transform_extractor = default_transform_extractor,
-              static_transform = False)
-             ```
-           The arguments of the constructor are:
-             * `location`, string – location in the source code from where the stamped transform will be extracted (it has to be completely initialized and ready for publishing at this point in the source code)
-             * `transform_extractor`, lambda function which returns a `gdb.Value` – this function is executed every time the breakpoint is reached, and computes the extracted stamped transform variable
-                * if an extractor isn't passed, the default behavior is to look up a variable named `stamped_transform`
-             * `static_transform`, boolean – whether to use a static transform broadcaster
+          ```bash
+          g++ -shared -fPIC -o gdb_ros_publisher_helper.so  -I /opt/ros/melodic/include -g gdb_ros_publisher_helper.cpp
+            ```
+
+          Tell rr to inject this library into your node:
+
+          ```bash
+          rr record --env=LD_PRELOAD=/home/user/gdb_ros_publisher/gdb_ros_publisher_helper.so  <node and arguments>...
+            ```
 
 #### Writing value extractors for variables
 
@@ -89,7 +87,7 @@ You can use the methods in the `gdb` module when writing variable extractors. Do
 
 ### Usage
 
-  1. Run a `roscore` server and start a gdb debugging session.
+  1. Run a `roscore` server and start a gdb debugging session (`rr replay`).
   2. Call the `ros_publisher_setup` command in the gdb shell.
 
   Afterwards, you can use the gdb commands `enable ros_publisher` and `disable ros_publisher` to enable/disable publishing (as with all gdb commands, you can use abbreviations, for example `ena ros` and `dis ros`).
