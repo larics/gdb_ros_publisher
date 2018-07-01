@@ -1,4 +1,5 @@
 import rospy
+from rospy.msg import AnyMsg
 
 class GdbPublisher(object):
   def __init__(self, topic, msgtype, queue_size = 1):
@@ -9,7 +10,7 @@ class GdbPublisher(object):
     self.queue_size = queue_size
 
   def publish(self, serialized_message, latch):
-    message = self.msgtype()
+    message = AnyMsg()
     message.deserialize(serialized_message)
     if self.publisher == None:
       self.publisher = rospy.Publisher(self.topic, self.msgtype, queue_size=self.queue_size, latch = latch)
