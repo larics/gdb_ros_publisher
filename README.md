@@ -60,6 +60,8 @@ https://rr-project.org
 
 ### Details on Python gdb programming (advanced)
 
+<details>
+
 #### Adding additional message publishing breakpoints
 
 The included breakpoint in `gdb_ros_publisher_helper.cpp` should be enough to catch all published messages. To add a new message publishing breakpoint, add a new `GdbMessageBreakpoint` instance to the `breakpoints` list. The constructor has the following prototype:
@@ -101,3 +103,4 @@ You can use the methods in the `gdb` module when writing variable extractors. Do
 
   * You can also use `gdb.parse_and_eval('c++ expression')` to evaluate C++ expressions (such as function/method calls)
 
+</details>
