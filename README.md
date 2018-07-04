@@ -2,7 +2,7 @@
 GDB support for republishing ROS messages in an rr replay
 
 ### Prerequisites
-Be sure to have installed the newest build of rr and GDB compiled with Python 2 by following the instructions from [here](http://larics.fer.hr/farm/laricswiki/doku.php?id=software:debugging).
+Be sure to have installed the newest build of rr and GDB compiled with Python 2 by following the instructions from [here](http://larics.fer.hr/farm/laricswiki/doku.php?id=software:debugging#ros_debugging_-_using_python_2_with_gdb).
 
 
 ### Setting up
@@ -55,6 +55,7 @@ Be sure to have installed the newest build of rr and GDB compiled with Python 2 
 ### Additional resources and tutorials
 
 http://larics.fer.hr/laricswiki/doku.php?id=software:debugging#reversible_debugging_with_rr
+
 https://rr-project.org
 
 ### Details on Python gdb programming (advanced)
