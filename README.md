@@ -37,7 +37,7 @@ Be sure to have installed the newest build of rr and GDB compiled with Python 2 
        2. Build the helper library for intercepting message publication:
 
           ```bash
-          g++ -shared -fPIC -o gdb_ros_publisher_helper.so  -I /opt/ros/melodic/include -g gdb_ros_publisher_helper.cpp
+          g++ -shared -fPIC -o gdb_ros_publisher_helper.so  -I /opt/ros/$ROS_DISTRO/include -g gdb_ros_publisher_helper.cpp
             ```
 
           Tell rr to inject this library into your node:
