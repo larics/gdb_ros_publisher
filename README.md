@@ -54,7 +54,7 @@ Be sure to have installed the newest build of rr and GDB compiled with Python 2 
 
 ### Additional resources and tutorials
 
-http://161.53.68.32/farm/laricswiki/doku.php?id=software:debugging#reversible_debugging_with_rr
+http://larics.fer.hr/laricswiki/doku.php?id=software:debugging#reversible_debugging_with_rr
 
 https://rr-project.org
 
